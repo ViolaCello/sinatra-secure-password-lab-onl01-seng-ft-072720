@@ -18,6 +18,12 @@ class ApplicationController < Sinatra::Base
 
   post "/signup" do
     #your code here
+    #binding.pry
+    if params[:username].length < 1 || params[:password].length < 1
+      redirect "/failure"
+    end
+      redirect "/login"
+   
 
   end
 
@@ -33,6 +39,15 @@ class ApplicationController < Sinatra::Base
 
   post "/login" do
     ##your code here
+   # if params[:username].length < 1 || params[:password].length < 1
+
+   user = User.find_by(:username => params[:username])
+ 
+   if user && user.authenticate(params[:password])
+     session[:user_id] = user.id
+      redirect "/account"
+    end
+    redirect '/failure'
   end
 
   get "/failure" do
